@@ -2,9 +2,9 @@
 
 # ComfyUI Rife TensorRT ⚡
 
-[![python](https://img.shields.io/badge/python-3.10.12-green)](https://www.python.org/downloads/release/python-31012/)
-[![cuda](https://img.shields.io/badge/cuda-12.4-green)](https://developer.nvidia.com/cuda-downloads)
-[![trt](https://img.shields.io/badge/TRT-10.4.0-green)](https://developer.nvidia.com/tensorrt)
+[![python](https://img.shields.io/badge/python-3.12.11-green)](https://www.python.org/downloads/release/python-31211/)
+[![cuda](https://img.shields.io/badge/cuda-12.9-green)](https://developer.nvidia.com/cuda-downloads)
+[![trt](https://img.shields.io/badge/TRT-10.13.3.9-green)](https://developer.nvidia.com/tensorrt)
 [![by-nc-sa/4.0](https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-lightgrey)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
 
 ![node](https://github.com/user-attachments/assets/5fd6d529-300c-42a5-b9cf-46e031f0bcb5)
@@ -40,26 +40,39 @@ cd ./ComfyUI-Rife-Tensorrt
 pip install -r requirements.txt
 ```
 
-## 🛠️ Building Tensorrt Engine
+## 🛠️ Supported Models
 
-1. Download one of the following onnx models:
-   - [rife49_ensemble_True_scale_1_sim.onnx](https://huggingface.co/yuvraj108c/rife-onnx/resolve/main/rife49_ensemble_True_scale_1_sim.onnx)
-   - [rife48_ensemble_True_scale_1_sim.onnx](https://huggingface.co/yuvraj108c/rife-onnx/resolve/main/rife48_ensemble_True_scale_1_sim.onnx)
-   - [rife47_ensemble_True_scale_1_sim.onnx](https://huggingface.co/yuvraj108c/rife-onnx/resolve/main/rife47_ensemble_True_scale_1_sim.onnx)
-2. Edit onnx/trt paths inside [export_trt.py](./export_trt.py) and build tensorrt engine by running:
-   - `python export_trt.py`
+The following RIFE models are supported and will be automatically downloaded and built:
+   - **rife49_ensemble_True_scale_1_sim** (default) - Latest and most accurate
+   - **rife48_ensemble_True_scale_1_sim** - Good balance of speed and quality
+   - **rife47_ensemble_True_scale_1_sim** - Fastest option
 
-3. Place the exported engine inside ComfyUI `/models/tensorrt/rife` directory
+Models are automatically downloaded from [HuggingFace](https://huggingface.co/yuvraj108c/rife-onnx) and TensorRT engines are built on first use.
 
 ## ☀️ Usage
 
-- Insert node by `Right Click -> tensorrt -> Rife Tensorrt`
-- Image resolutions between `256x256` and `3840x3840` will work with the tensorrt engines 
+1. **Load Model**: Insert `Right Click -> Add Node -> tensorrt -> Load Rife Tensorrt Model`
+   - Choose your preferred RIFE model (rife47, rife48, or rife49)
+   - Select precision (fp16 recommended for speed, fp32 for maximum accuracy)
+   - The model will be automatically downloaded and TensorRT engine built on first use
+
+2. **Process Frames**: Insert `Right Click -> Add Node -> tensorrt -> Rife Tensorrt`
+   - Connect the loaded model from step 1
+   - Input your video frames
+   - Configure interpolation settings (multiplier, CUDA graph, etc.)
+   - Image resolutions between `256x256` and `3840x3840` are supported 
 
 ## 🤖 Environment tested
 
-- Ubuntu 22.04 LTS, Cuda 12.4, Tensorrt 10.4.0, Python 3.10, RTX 3070 GPU
+- WSL Ubuntu 24.04.03 LTS, Cuda 12.9, Tensorrt 10.13.3.9, Python 3.12.11, RTX 5080 GPU
 - Windows (Not tested, but should work)
+
+## 🚨 Updates
+
+### December 2025
+- **Automatic Model Management**: No more manual downloads! Models are automatically downloaded from HuggingFace and TensorRT engines are built on demand
+- **Improved Workflow**: New two-node system with `Load Rife Tensorrt Model` + `Rife Tensorrt` for better organization
+- **Updated Dependencies**: TensorRT updated to 10.13.3.9 for better performance and compatibility
 
 ## 👏 Credits
 

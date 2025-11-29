@@ -1,5 +1,7 @@
 einops
 colored
 polygraphy
-tensorrt==10.4.0
+tensorrt==10.13.3.9
 cuda-python
+requests
+tqdm

@@ -7,7 +7,7 @@ import einops
 from comfy.model_management import soft_empty_cache, get_torch_device
 import numpy as np
 from comfy.utils import ProgressBar
-from colored import Fore, Back, Style  
+from colored import Fore, Back, Style
 
 DEVICE = get_torch_device()
 
@@ -40,7 +40,7 @@ def generate_frames_rife(
         multiplier,
         return_middle_frame_function
         ):
-        
+
     output_frames = torch.zeros(multiplier*frames.shape[0], *frames.shape[1:], device="cpu")
     out_len = 0
 
@@ -70,7 +70,7 @@ def generate_frames_rife(
                 logger("Clearing cache...")
 
             pbar.update(1)
-            
+
 
     # Append final frame
     output_frames[out_len] = frames[-1:]
@@ -80,6 +80,6 @@ def generate_frames_rife(
     # clear cache for courtesy
     soft_empty_cache()
     logger("Final clearing cache done ...")
-# 
+#
     res = output_frames[:out_len]
     return res

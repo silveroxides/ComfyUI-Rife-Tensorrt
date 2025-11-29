@@ -136,19 +136,53 @@ class Engine:
         self.buffers = OrderedDict()
         self.tensors = OrderedDict()
         self.cuda_graph_instance = None  # cuda graph
+        self.graph = None
 
     def __del__(self):
+        # Clean up CUDA graph resources
+        if hasattr(self, 'cuda_graph_instance') and self.cuda_graph_instance is not None:
+            try:
+                cudart.cudaGraphDestroy(self.cuda_graph_instance)
+            except:
+                pass
+        if hasattr(self, 'graph') and self.graph is not None:
+            try:
+                cudart.cudaGraphDestroy(self.graph)
+            except:
+                pass
+
         del self.engine
         del self.context
         del self.buffers
         del self.tensors
 
     def reset(self, engine_path=None):
-        del self.engine
-        del self.context
-        del self.buffers
-        del self.tensors
-        self.engine_path = engine_path
+        # Clean up CUDA graph resources first
+        if hasattr(self, 'cuda_graph_instance') and self.cuda_graph_instance is not None:
+            try:
+                cudart.cudaGraphDestroy(self.cuda_graph_instance)
+            except:
+                pass
+            self.cuda_graph_instance = None
+        if hasattr(self, 'graph') and self.graph is not None:
+            try:
+                cudart.cudaGraphDestroy(self.graph)
+            except:
+                pass
+            self.graph = None
+
+        if hasattr(self, 'engine') and self.engine is not None:
+            del self.engine
+        if hasattr(self, 'context') and self.context is not None:
+            del self.context
+        if hasattr(self, 'buffers'):
+            del self.buffers
+        if hasattr(self, 'tensors'):
+            del self.tensors
+
+        self.engine = None
+        self.context = None
+        self.engine_path = engine_path if engine_path else self.engine_path
 
         self.buffers = OrderedDict()
         self.tensors = OrderedDict()
@@ -220,6 +254,10 @@ class Engine:
         self.engine = engine_from_bytes(bytes_from_path(self.engine_path))
 
     def activate(self, reuse_device_memory=None):
+        # If engine was reset, reload it
+        if self.engine is None:
+            self.load()
+
         if reuse_device_memory:
             self.context = self.engine.create_execution_context_without_device_memory()
         #    self.context.device_memory = reuse_device_memory
@@ -227,6 +265,20 @@ class Engine:
             self.context = self.engine.create_execution_context()
 
     def allocate_buffers(self, shape_dict=None, device="cuda"):
+        # Clean up CUDA graph resources since tensors will be recreated
+        if hasattr(self, 'cuda_graph_instance') and self.cuda_graph_instance is not None:
+            try:
+                cudart.cudaGraphDestroy(self.cuda_graph_instance)
+            except:
+                pass
+            self.cuda_graph_instance = None
+        if hasattr(self, 'graph') and self.graph is not None:
+            try:
+                cudart.cudaGraphDestroy(self.graph)
+            except:
+                pass
+            self.graph = None
+
         nvtx.range_push("allocate_buffers")
         for idx in range(self.engine.num_io_tensors):
             name = self.engine.get_tensor_name(idx)

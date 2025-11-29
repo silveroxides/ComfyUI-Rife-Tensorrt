@@ -14,10 +14,10 @@ from onnxsim import simplify
 MODEL_TYPE = pathlib.Path(__file__).parent.name
 CKPT_NAME_VER_DICT = {
     "rife40.pth": "4.0",
-    "rife41.pth": "4.0", 
-    "rife42.pth": "4.2", 
-    "rife43.pth": "4.3", 
-    "rife44.pth": "4.3", 
+    "rife41.pth": "4.0",
+    "rife42.pth": "4.2",
+    "rife43.pth": "4.3",
+    "rife44.pth": "4.3",
     "rife45.pth": "4.5",
     "rife46.pth": "4.6",
     "rife47.pth": "4.7",
@@ -106,7 +106,7 @@ def export_onnx(ckpt_name, ensemble, scale_factor):
         'img1': {2: 'height', 3: 'width'},
         'output': {2: 'height', 3: 'width'},
     }
-    
+
     with torch.no_grad():  # Disable gradients for efficiency
         torch.onnx.export(interpolation_model,
                 (img0, img1, timestep), # ensemble + scale_factor set in forward fn
@@ -124,7 +124,7 @@ def export_onnx(ckpt_name, ensemble, scale_factor):
         onnx_model = onnx.load(onnx_save_path)
         onnx.checker.check_model(onnx_model)  # Perform a validity check
         print("ONNX model validation successful!")
-        
+
         # print(onnx.helper.printable_graph(onnx_model.graph))
 
         sim_model_path = os.path.join("models",  f"{ckpt_name.split('.')[0]}_ensemble_{ensemble}_scale_{scale_factor}_sim.onnx")
