@@ -1,6 +1,6 @@
 [project]
 name = "ComfyUI-Rife-Tensorrt"
-description = "Ultra fast frame interpolation using Rife with TensorRT inside ComfyUI"
+description = "Ultra fast frame interpolation using RIFE with TensorRT inside ComfyUI"
 version = "1.0.0"
 license = { file = "LICENSE" }
 
@@ -10,5 +10,5 @@ Repository = "https://github.com/silveroxides/ComfyUI-Rife-Tensorrt"
 
 [tool.comfy]
 PublisherId = "silveroxides"
-DisplayName = "ComfyUI RIFE TensorRT"
+DisplayName = "ComfyUI-Rife-Tensorrt"
 Icon = ""
