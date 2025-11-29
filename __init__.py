@@ -58,7 +58,7 @@ def load_node_config(config_filename="load_rife_config.json"):
 # Load the configuration once when the module is imported
 LOAD_RIFE_NODE_CONFIG = load_node_config()
 
-class LoadRifeTensorrtModel:
+class AutoLoadRifeTensorrtModel:
     @classmethod
     def INPUT_TYPES(cls):
         # Use the pre-loaded configuration
@@ -135,7 +135,7 @@ class LoadRifeTensorrtModel:
 
         return (engine,)
 
-class RifeTensorrt:
+class AutoRifeTensorrt:
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -202,13 +202,14 @@ class RifeTensorrt:
 
 
 NODE_CLASS_MAPPINGS = {
-    "RifeTensorrt": RifeTensorrt,
-    "LoadRifeTensorrtModel": LoadRifeTensorrtModel,
+    "AutoRifeTensorrt": AutoRifeTensorrt,
+    "AutoLoadRifeTensorrtModel": AutoLoadRifeTensorrtModel,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "RifeTensorrt": "⚡ Rife Tensorrt",
-    "LoadRifeTensorrtModel": "Load Rife Tensorrt Model",
+    "AutoRifeTensorrt": "Auto RIFE TensorRT",
+    "AutoLoadRifeTensorrtModel": "(Down)load RIFE TensorRT Model",
 }
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
+
